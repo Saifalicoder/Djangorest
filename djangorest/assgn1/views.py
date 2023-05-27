@@ -1,11 +1,13 @@
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from .serializer import UserSerializer as Userserializer
 from .serializer import BookSerializer
 from django.http import JsonResponse
 import json
+from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from .models import Book
 User = get_user_model()
@@ -33,6 +35,31 @@ def signup(request):
             return Response(serializer.errors, status=400)
     else:
         return JsonResponse({'error': 'Invalid request method.'})
+
+
+@api_view(['POST'])
+def login(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('username')
+        password = data.get('password')
+        # print("hello")
+        print(email)
+        print(password)
+        if email and password:
+            print("hello")
+            user = authenticate(username=email, password=password)
+            serializer = Userserializer(user, many=False)
+            print(serializer.data)
+            if user:
+                refresh = RefreshToken.for_user(user)
+                print(refresh)
+                return JsonResponse(
+                    {'user': serializer.data,
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                     }
+                )
 
 
 @api_view(['GET'])
