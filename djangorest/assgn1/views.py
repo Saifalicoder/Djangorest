@@ -9,6 +9,8 @@ from django.http import JsonResponse
 import json
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Book
 User = get_user_model()
 
@@ -30,6 +32,13 @@ def signup(request):
             user = User.objects.create_user(username=first_name+'_'+last_name,
                                             email=email, password=password, first_name=first_name, last_name=last_name)
             user.save()
+            send_mail(
+                'Signup Successfull',
+                f"Hello {first_name} your account has been successfully created on the djangorest website",
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
             return JsonResponse({'message': 'User created successfully.'})
         else:
             return Response(serializer.errors, status=400)
@@ -80,7 +89,6 @@ def getRoutes(request):
 @api_view(['GET'])
 def getUsers(request):
     user = User.objects.all()
-    print(user)
     serializer = Userserializer(user, many=True)
     return Response(serializer.data)
 
