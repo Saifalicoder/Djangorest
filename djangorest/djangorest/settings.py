@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9(34+37(7o0_r^zxbax6&r29fcm39fmfo((ltk3&j&+$(h69&@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -112,8 +112,14 @@ SIMPLE_JWT = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'inpezelx',
+        'USER': 'inpezelx',
+        'PASSWORD': 'S4uUM5aVz5yplbb9jLQp0SbyFOpq-OMs',
+        'HOST': 'lucky.db.elephantsql.com',
+        'PORT': '5432'
+
     }
 }
 
